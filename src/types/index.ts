@@ -11,6 +11,7 @@ export interface Question {
   text: string;
   options: string[];
   correctOption: number;
+  team_id: number;
 }
 
 export interface Line {

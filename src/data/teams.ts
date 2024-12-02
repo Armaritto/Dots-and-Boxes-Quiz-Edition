@@ -1,10 +1,48 @@
+import axios from 'axios';
 import { Team } from '../types';
 
-export const teams: Team[] = [
-  { id: 1, name: 'Red Team', color: '#EF4444', score: 0, answeredQuestions: [] },
-  { id: 2, name: 'Blue Team', color: '#3B82F6', score: 0, answeredQuestions: [] },
-  { id: 3, name: 'Green Team', color: '#10B981', score: 0, answeredQuestions: [] },
-  { id: 4, name: 'Purple Team', color: '#8B5CF6', score: 0, answeredQuestions: [] },
-  { id: 5, name: 'Yellow Team', color: '#F59E0B', score: 0, answeredQuestions: [] },
-  { id: 6, name: 'Pink Team', color: '#EC4899', score: 0, answeredQuestions: [] },
-];
+const teamsEndpoint = 'http://localhost:9000/api/teams';
+
+export const fetchTeams = async (): Promise<Team[]> => {
+  try {
+    const response = await axios.get(teamsEndpoint);
+    const teams: Omit<Team, 'score' | 'answeredQuestions'>[] = response.data;
+
+    if (!Array.isArray(teams) || teams.length === 0) {
+      console.warn('No teams received from API');
+      throw new Error('No teams available');
+    }
+
+    // Validate team structure
+    const isValidTeam = (t: unknown): t is Omit<Team, 'score' | 'answeredQuestions'> => {
+      if (typeof t !== 'object' || t === null) return false;
+
+      const team = t as { [key: string]: unknown };
+      return (
+          typeof team.id === 'number' &&
+          typeof team.name === 'string' &&
+          typeof team.color === 'string'
+      );
+    };
+
+    const validTeams = teams.filter(isValidTeam);
+    if (validTeams.length === 0) {
+      throw new Error('No valid teams');
+    }
+
+    // Add dynamic properties
+    const dynamicTeams: Team[] = validTeams.map(team => ({
+      ...team,
+      score: 0,
+      answeredQuestions: []
+    }));
+
+    return dynamicTeams;
+  } catch (error) {
+    console.error('Error fetching teams:', error);
+    throw error;
+  }
+};
+
+// Fetch and export teams
+export const teams = await fetchTeams();
