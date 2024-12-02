@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Line, Square, Team, Question } from '../types';
 import { teams } from '../data/teams';
 import QuestionModal from './QuestionModal';
@@ -168,8 +168,8 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
       <div
         className="relative bg-white rounded-lg shadow-lg p-8"
         style={{
-          width: (width - 1) * spacing + 80,
-          height: (height - 1) * spacing + 80,
+          width: (width - 1) * spacing,
+          height: (height - 1) * spacing,
         }}
       >
         {renderSquares()}
