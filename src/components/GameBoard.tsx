@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Line, Square, Team } from '../types';
+import { Line, Square, Team, Question } from '../types';
 import { teams } from '../data/teams';
 import QuestionModal from './QuestionModal';
 import { isLineExists, findNewSquares } from '../utils/gameLogic';
@@ -17,7 +17,11 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
   const [selectedLine, setSelectedLine] = useState<Line | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const [gameTeams, setGameTeams] = useState(teams);
+  const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
+  const [gameTeams, setGameTeams] = useState(teams.map(team => ({
+    ...team,
+    answeredQuestions: [] as number[]
+  })));
 
   const handleLineClick = (startX: number, startY: number, endX: number, endY: number) => {
     if (isLineExists(lines, startX, startY, endX, endY)) return;
@@ -27,14 +31,14 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
   };
 
   const handleQuestionSuccess = () => {
-    if (selectedLine && selectedTeam) {
+    if (selectedLine && selectedTeam && selectedQuestion) {
       // Update answered questions for the team
-      setGameTeams(
-        gameTeams.map((team) =>
+      setGameTeams(prevTeams =>
+        prevTeams.map(team =>
           team.id === selectedTeam.id
             ? {
                 ...team,
-                answeredQuestions: [...team.answeredQuestions, selectedTeam.id],
+                answeredQuestions: [...team.answeredQuestions, selectedQuestion.id]
               }
             : team
         )
@@ -55,8 +59,8 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
         ];
         setSquares(newSquares);
 
-        setGameTeams(
-          gameTeams.map((team) =>
+        setGameTeams(prevTeams =>
+          prevTeams.map(team =>
             team.id === selectedTeam.id
               ? { ...team, score: team.score + newSquarePositions.length }
               : team
@@ -66,6 +70,7 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
 
       setSelectedLine(null);
       setSelectedTeam(null);
+      setSelectedQuestion(null);
       setIsModalOpen(false);
     }
   };
@@ -175,11 +180,15 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
           onClose={() => {
             setIsModalOpen(false);
             setSelectedTeam(null);
+            setSelectedQuestion(null);
             setSelectedLine(null);
           }}
           onSuccess={handleQuestionSuccess}
           selectedTeam={selectedTeam}
           onTeamSelect={setSelectedTeam}
+          selectedQuestion={selectedQuestion}
+          onQuestionSelect={setSelectedQuestion}
+          gameTeams={gameTeams}
         />
       </div>
     </div>
