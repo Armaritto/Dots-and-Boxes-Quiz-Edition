@@ -6,7 +6,8 @@ import { HelpCircle, X } from 'lucide-react';
 interface QuestionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (correctOptionText: string) => void;
+  onFail: (correctOptionText: string) => void;
   selectedTeam: Team | null;
   onTeamSelect: (team: Team) => void;
   selectedQuestion: Question | null;
@@ -18,6 +19,7 @@ export default function QuestionModal({
   isOpen,
   onClose,
   onSuccess,
+  onFail,
   selectedTeam,
   onTeamSelect,
   selectedQuestion,
@@ -28,11 +30,16 @@ export default function QuestionModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedQuestion && selectedOption !== null && selectedOption === selectedQuestion.correctOption) {
-      onSuccess();
-    } else {
-      setSelectedOption(null);
+    if (selectedQuestion && selectedOption !== null) {
+      const correctOptionText = selectedQuestion.options[selectedQuestion.correctOption];
+      if (selectedOption === selectedQuestion.correctOption) {
+        onSuccess(correctOptionText);
+      } else {
+        onFail(correctOptionText);
+      }
     }
+    else
+      throw new Error('Invalid question or option');
   };
 
   const getAvailableQuestions = () => {
@@ -186,6 +193,7 @@ export default function QuestionModal({
                       Submit Answer
                     </button>
                   </form>
+
                 </div>
               )}
             </>

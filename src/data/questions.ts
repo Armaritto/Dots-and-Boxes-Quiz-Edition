@@ -30,8 +30,9 @@ export const fetchQuestions = async (): Promise<Record<number, Question[]>> => {
 
     // Attach options to questions
     questions.forEach(question => {
-      question.options = optionsByQuestionId[question.id]?.map(opt => opt.text) || [];
-      question.correctOption = optionsByQuestionId[question.id]?.find(opt => opt.is_correct)?.id || -1;
+      const questionOptions = optionsByQuestionId[question.id] || [];
+      question.options = questionOptions.map(opt => opt.text);
+      question.correctOption = questionOptions.findIndex(opt => opt.is_correct);
     });
 
     // Group questions by team_id
@@ -42,6 +43,7 @@ export const fetchQuestions = async (): Promise<Record<number, Question[]>> => {
       acc[question.team_id].push(question);
       return acc;
     }, {} as Record<number, Question[]>);
+
   } catch (error) {
     console.error('Error fetching questions:', error);
     throw error;
