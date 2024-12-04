@@ -12,7 +12,7 @@ export const fetchQuestions = async (): Promise<Record<number, Question[]>> => {
     ]);
 
     const questions: Question[] = questionsResponse.data;
-    const options: { question_id: number; option_text: string; is_correct: boolean; id: number }[] = optionsResponse.data;
+    const options: { question_id: number; text: string; is_correct: boolean; id: number }[] = optionsResponse.data;
 
     if (!Array.isArray(questions) || questions.length === 0) {
       console.warn('No questions received from API');
@@ -20,7 +20,7 @@ export const fetchQuestions = async (): Promise<Record<number, Question[]>> => {
     }
 
     // Group options by question_id
-    const optionsByQuestionId = options.reduce((acc: Record<number, { option_text: string; is_correct: boolean; id: number }[]>, option: { question_id: number; option_text: string; is_correct: boolean; id: number }) => {
+    const optionsByQuestionId = options.reduce((acc: Record<number, { text: string; is_correct: boolean; id: number }[]>, option: { question_id: number; text: string; is_correct: boolean; id: number }) => {
       if (!acc[option.question_id]) {
         acc[option.question_id] = [];
       }
@@ -30,7 +30,7 @@ export const fetchQuestions = async (): Promise<Record<number, Question[]>> => {
 
     // Attach options to questions
     questions.forEach(question => {
-      question.options = optionsByQuestionId[question.id]?.map(opt => opt.option_text) || [];
+      question.options = optionsByQuestionId[question.id]?.map(opt => opt.text) || [];
       question.correctOption = optionsByQuestionId[question.id]?.find(opt => opt.is_correct)?.id || -1;
     });
 

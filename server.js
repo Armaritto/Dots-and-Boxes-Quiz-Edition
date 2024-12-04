@@ -43,7 +43,6 @@ app.get('/api/questions', (req, res) => {
     });
 });
 
-// Fetch all options
 app.get('/api/options', (req, res) => {
     db.query('SELECT * FROM options', (err, results) => {
         if (err) {
@@ -55,7 +54,6 @@ app.get('/api/options', (req, res) => {
     });
 });
 
-// Fetch options for a specific question
 app.get('/api/questions/:questionId/options', (req, res) => {
     const { questionId } = req.params;
     db.query('SELECT * FROM options WHERE question_id = ?', [questionId], (err, results) => {
@@ -68,10 +66,9 @@ app.get('/api/questions/:questionId/options', (req, res) => {
     });
 });
 
-// Create a new option
 app.post('/api/options', (req, res) => {
-    const { is_correct, question_id } = req.body;
-    db.query('INSERT INTO options (is_correct, question_id) VALUES (?, ?)', [is_correct, question_id], (err, results) => {
+    const { is_correct, text, question_id } = req.body;
+    db.query('INSERT INTO options (is_correct, text, question_id) VALUES (?, ?, ?)', [is_correct, text, question_id], (err, results) => {
         if (err) {
             console.error('Error creating option:', err);
             res.status(500).send('Error creating option');
@@ -81,11 +78,10 @@ app.post('/api/options', (req, res) => {
     });
 });
 
-// Update an option
 app.put('/api/options/:id', (req, res) => {
     const { id } = req.params;
-    const { is_correct, question_id } = req.body;
-    db.query('UPDATE options SET is_correct = ?, question_id = ? WHERE id = ?', [is_correct, question_id, id], (err) => {
+    const { is_correct, text, question_id } = req.body;
+    db.query('UPDATE options SET is_correct = ?, text = ?, question_id = ? WHERE id = ?', [is_correct, text, question_id, id], (err) => {
         if (err) {
             console.error('Error updating option:', err);
             res.status(500).send('Error updating option');
@@ -95,7 +91,6 @@ app.put('/api/options/:id', (req, res) => {
     });
 });
 
-// Delete an option
 app.delete('/api/options/:id', (req, res) => {
     const { id } = req.params;
     db.query('DELETE FROM options WHERE id = ?', [id], (err) => {
@@ -108,7 +103,6 @@ app.delete('/api/options/:id', (req, res) => {
     });
 });
 
-// Create a new question
 app.post('/api/questions', (req, res) => {
     const { text, team_id } = req.body;
     db.query('INSERT INTO questions (text, team_id) VALUES (?, ?)', [text, team_id], (err, results) => {
@@ -121,7 +115,6 @@ app.post('/api/questions', (req, res) => {
     });
 });
 
-// Update an existing question
 app.put('/api/questions/:id', (req, res) => {
     const { id } = req.params;
     const { text, team_id } = req.body;
@@ -135,7 +128,6 @@ app.put('/api/questions/:id', (req, res) => {
     });
 });
 
-// Delete a question
 app.delete('/api/questions/:id', (req, res) => {
     const { id } = req.params;
     db.query('DELETE FROM questions WHERE id = ?', [id], (err) => {
