@@ -92,7 +92,6 @@ app.get('/api/questions/:questionId/options', (req, res) => {
             res.status(500).send('Error fetching options for question');
             return;
         }
-        console.log("success")
         res.json(results);
     });
 });
