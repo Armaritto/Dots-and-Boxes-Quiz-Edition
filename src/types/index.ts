@@ -3,7 +3,8 @@ export interface Team {
   name: string;
   color: string;
   score: number;
-  answeredQuestions: number[];
+  answeredQuestions: number[],
+  admin_id: number;
 }
 
 export interface Question {
@@ -12,6 +13,12 @@ export interface Question {
   options: string[];
   correctOption: number;
   team_id: number;
+}
+
+export interface Admin {
+  id: number;
+  username: string;
+  name: string;
 }
 
 export interface Line {

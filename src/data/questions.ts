@@ -1,17 +1,19 @@
 import axios from 'axios';
 import { Question } from '../types';
 
-const questionsEndpoint = 'http://localhost:9000/api/questions';
-const optionsEndpoint = 'http://localhost:9000/api/options';
+const API_URL = 'http://localhost:9000/api';
 
-export const fetchQuestions = async (): Promise<Record<number, Question[]>> => {
+export const fetchQuestions = async (teamIds: number[]): Promise<Record<number, Question[]>> => {
   try {
+    // Fetch questions and options for all teams
     const [questionsResponse, optionsResponse] = await Promise.all([
-      axios.get(questionsEndpoint),
-      axios.get(optionsEndpoint)
+      Promise.all(teamIds.map(teamId =>
+          axios.get(`${API_URL}/questions/${teamId}`)
+      )),
+      axios.get(`${API_URL}/options`)
     ]);
 
-    const questions: Question[] = questionsResponse.data;
+    const questions: Question[] = questionsResponse.flatMap(response => response.data);
     const options: { question_id: number; text: string; is_correct: boolean; id: number }[] = optionsResponse.data;
 
     if (!Array.isArray(questions) || questions.length === 0) {
@@ -50,5 +52,4 @@ export const fetchQuestions = async (): Promise<Record<number, Question[]>> => {
   }
 };
 
-// Fetch and export teamQuestions
-export const teamQuestions = await fetchQuestions();
+export const teamQuestions = async (teamIds: number[]) => await fetchQuestions(teamIds);

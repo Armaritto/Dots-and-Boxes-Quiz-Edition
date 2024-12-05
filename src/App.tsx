@@ -1,14 +1,47 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import LoginPage from './components/LoginPage';
+import QuestionsPage from './components/QuestionsPage';
 import GameBoard from './components/GameBoard';
 
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+    const { admin, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
+    return admin ? <>{children}</> : <Navigate to="/login" />;
+}
+
 function App() {
-  return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Dots and Boxes Challenge</h1>
-      <p className="text-gray-600 mb-8">Connect dots to create squares and score points!</p>
-      <GameBoard width={5} height={4} spacing={80} />
-    </div>
-  );
+    return (
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route
+                        path="/questions"
+                        element={
+                            <PrivateRoute>
+                                <QuestionsPage />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/game"
+                        element={
+                            <PrivateRoute>
+                                <GameBoard width={5} height={5} spacing={100} />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route path="/" element={<Navigate to="/login" />} />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
+    );
 }
 
 export default App;

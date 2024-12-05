@@ -1,15 +1,16 @@
 import axios from 'axios';
-import { Team } from '../types';
+import {Team} from '../types';
 
-const teamsEndpoint = 'http://localhost:9000/api/teams';
+const API_URL = 'http://localhost:9000/api';
 
-export const fetchTeams = async (): Promise<Team[]> => {
+export const fetchTeams = async (adminId: number): Promise<Team[]> => {
   try {
-    const response = await axios.get(teamsEndpoint);
+    const response = await axios.get(`${API_URL}/teams/${adminId}`);
     const teams: Omit<Team, 'score' | 'answeredQuestions'>[] = response.data;
 
     if (!Array.isArray(teams) || teams.length === 0) {
       console.warn('No teams received from API');
+      console.log(adminId)
       throw new Error('No teams available');
     }
 
@@ -31,18 +32,15 @@ export const fetchTeams = async (): Promise<Team[]> => {
     }
 
     // Add dynamic properties
-    const dynamicTeams: Team[] = validTeams.map(team => ({
+    return validTeams.map(team => ({
       ...team,
       score: 0,
       answeredQuestions: []
     }));
-
-    return dynamicTeams;
   } catch (error) {
     console.error('Error fetching teams:', error);
     throw error;
   }
 };
 
-// Fetch and export teams
-export const teams = await fetchTeams();
+export const teams = async (adminId: number) => await fetchTeams(adminId);

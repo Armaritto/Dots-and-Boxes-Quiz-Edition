@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Line, Square, Team, Question } from '../types';
-import { teams } from '../data/teams';
+import { teams } from '../data/teams.ts'; // Ensure this path is correct
 import QuestionModal from './QuestionModal';
 import { isLineExists, findNewSquares } from '../utils/gameLogic';
 import ScoreBoard from './ScoreBoard';
 import SuccessModal from './SuccessModalProps';
 import FailModal from './FailModalProps';
+import {useLocation} from "react-router-dom";
 
 interface GameBoardProps {
     width: number;
@@ -14,20 +15,35 @@ interface GameBoardProps {
 }
 
 export default function GameBoard({ width, height, spacing }: GameBoardProps) {
+    const location = useLocation();
+    const adminId = location.state?.adminId;
     const [lines, setLines] = useState<Line[]>([]);
     const [squares, setSquares] = useState<Square[]>([]);
     const [selectedLine, setSelectedLine] = useState<Line | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
     const [selectedQuestion, setSelectedQuestion] = useState<Question | null>(null);
-    const [gameTeams, setGameTeams] = useState(teams.map(team => ({
-        ...team,
-        answeredQuestions: [] as number[]
-    })));
+    const [gameTeams, setGameTeams] = useState<Team[]>([]);
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [failMessage, setFailMessage] = useState<string>('');
     const [isFailModalOpen, setIsFailModalOpen] = useState(false);
+
+    useEffect(() => {
+        const fetchTeamsData = async () => {
+            try {
+                const fetchedTeams = await teams(adminId);
+                setGameTeams(fetchedTeams.map((team: Team) => ({
+                    ...team,
+                    answeredQuestions: [] as number[]
+                })));
+            } catch (error) {
+                console.error('Error fetching teams:', error);
+            }
+        };
+        fetchTeamsData();
+    }, [adminId]);
+
     const handleLineClick = (startX: number, startY: number, endX: number, endY: number) => {
         if (isLineExists(lines, startX, startY, endX, endY)) return;
 
@@ -140,7 +156,7 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
                             left: x * spacing + 12,
                             top: y * spacing,
                             width: spacing - 24,
-                            backgroundColor: line ? teams.find(t => t.id === line.teamId)?.color : '#E5E7EB',
+                            backgroundColor: line ? gameTeams.find(t => t.id === line.teamId)?.color : '#E5E7EB',
                         }}
                         onClick={() => handleLineClick(x, y, x + 1, y)}
                     />
@@ -159,7 +175,7 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
                             left: x * spacing,
                             top: y * spacing + 12,
                             height: spacing - 24,
-                            backgroundColor: line ? teams.find(t => t.id === line.teamId)?.color : '#E5E7EB',
+                            backgroundColor: line ? gameTeams.find(t => t.id === line.teamId)?.color : '#E5E7EB',
                         }}
                         onClick={() => handleLineClick(x, y, x, y + 1)}
                     />
@@ -171,7 +187,7 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
 
     const renderSquares = () => {
         return squares.map((square, index) => {
-            const team = teams.find(t => t.id === square.teamId);
+            const team = gameTeams.find(t => t.id === square.teamId);
             return (
                 <div
                     key={`square-${index}`}
