@@ -6,7 +6,7 @@ import { isLineExists, findNewSquares } from '../utils/gameLogic';
 import ScoreBoard from './ScoreBoard';
 import SuccessModal from './SuccessModalProps';
 import FailModal from './FailModalProps';
-import {useLocation} from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 interface GameBoardProps {
     width: number;
@@ -205,8 +205,7 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
     };
 
     return (
-        <div className="flex flex-col items-center gap-8">
-            <ScoreBoard teams={gameTeams} />
+        <div className="flex flex-row justify-center items-center gap-8 bg-gray-100 p-8 min-h-screen">
             <div
                 className="relative bg-white rounded-lg shadow-lg p-8"
                 style={{
@@ -246,6 +245,7 @@ export default function GameBoard({ width, height, spacing }: GameBoardProps) {
                     />
                 )}
             </div>
+            <ScoreBoard teams={gameTeams} />
         </div>
     );
 }

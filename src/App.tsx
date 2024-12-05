@@ -33,7 +33,7 @@ function App() {
                         path="/game"
                         element={
                             <PrivateRoute>
-                                <GameBoard width={5} height={5} spacing={100} />
+                                <GameBoard width={5} height={5} spacing={120} />
                             </PrivateRoute>
                         }
                     />
