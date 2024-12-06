@@ -89,9 +89,6 @@ export default function QuestionsPage() {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    ID
-                                </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/2">
                                     Question
                                 </th>
@@ -108,9 +105,6 @@ export default function QuestionsPage() {
                                 const team = teams.find(t => t.id === question.team_id);
                                 return (
                                     <tr key={question.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            #{question.id}
-                                        </td>
                                         <td className="px-6 py-4 text-sm text-gray-900">
                                             {question.text}
                                         </td>
