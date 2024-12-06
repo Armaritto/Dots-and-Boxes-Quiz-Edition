@@ -16,7 +16,7 @@ An interactive educational game that combines the classic Dots and Boxes game wi
 - Vite for build tooling
 - Tailwind CSS for styling
 - Express.js for server-side rendering
-- MYSQL for data storage
+- MySQL for data storage
 
 
 ## Installation and How to Run
