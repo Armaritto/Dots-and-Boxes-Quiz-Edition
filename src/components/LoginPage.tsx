@@ -25,7 +25,6 @@ export default function LoginPage() {
 
     const onSubmit = async (data: LoginFormData) => {
         try {
-            console.log(data);
             await login(data.username, data.password);
             navigate('/questions');
         } catch (error) {
