@@ -46,14 +46,17 @@ Follow these steps to set up and run the project locally:
 
 
 ## Screenshots
-### Game Board
-![Game Board](screenshots/game-board.png)
+### Question Management
+![QuestionsManagement.png](assets/QuestionsManagement.png)
 
-### Score Board
-![Score Board](screenshots/score-board.png)
+### Game Board
+![GameBoard.png](assets/GameBoard.png)
+
+### Choose Teams
+![ChooseTeams.png](assets/ChooseTeams.png)
 
 ### Question Modal
-![Question Modal](screenshots/question-modal.png)
+![QuestionModal.png](assets/QuestionModal.png)
 
 ## Game Rules
 
