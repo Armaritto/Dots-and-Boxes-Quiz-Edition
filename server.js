@@ -1,11 +1,14 @@
 import express from 'express';
 import mysql from 'mysql';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const app = express();
 app.use(express.json());
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const db = mysql.createConnection({
