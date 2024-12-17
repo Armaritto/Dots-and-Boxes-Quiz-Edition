@@ -1,6 +1,5 @@
 import express from 'express';
 import mysql from 'mysql';
-import cors from 'cors';
 import dotenv from 'dotenv';
 
 const app = express();
@@ -23,11 +22,6 @@ db.connect(err => {
 });
 
 app.use(express.static('dist'));
-
-app.get('/', (req, res) => {
-    // Send index.html
-    res.sendFile(import.meta.dirname + '/dist/index.html');
-});
 
 // Authentication endpoint
 app.post('/api/auth/login', (req, res) => {
@@ -192,6 +186,13 @@ app.delete('/api/questions/:id', (req, res) => {
         }
         res.sendStatus(204);
     });
+});
+
+
+// ALWAYS KEEP THIS AT THE END
+app.get('*', (req, res) => {
+    // Send index.html
+    res.sendFile(import.meta.dirname + '/dist/index.html');
 });
 
 const PORT = process.env.PORT || 9000;
