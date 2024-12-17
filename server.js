@@ -1,10 +1,12 @@
 import express from 'express';
 import mysql from 'mysql';
 import dotenv from 'dotenv';
+import { dirname } from 'path';
 
 const app = express();
 app.use(express.json());
 dotenv.config();
+const __dirname = dirname(__filename);
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -192,7 +194,7 @@ app.delete('/api/questions/:id', (req, res) => {
 // ALWAYS KEEP THIS AT THE END
 app.get('*', (req, res) => {
     // Send index.html
-    res.sendFile(import.meta.dirname + '/dist/index.html');
+    res.sendFile(__dirname + '/dist/index.html');
 });
 
 const PORT = process.env.PORT || 9000;
