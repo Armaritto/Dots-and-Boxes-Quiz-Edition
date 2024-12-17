@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Question } from '../types';
 
-const API_URL = 'http://localhost:9000/api';
+const API_URL = import.meta.env.VITE_API_URL + '/api';
 
 export const fetchQuestions = async (teamIds: number[]): Promise<Record<number, Question[]>> => {
   try {
