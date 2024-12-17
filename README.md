@@ -30,16 +30,20 @@ Follow these steps to set up and run the project locally:
     ```
 3. **Configure the database:**
     - Create a new database in MySQL
-    - Change the `.env` file credentials to match your database configuration:
-    - Run the database schema:
+    - Run the database schema (Run in src/db/schema.sql):
     ```sh
     mysql -u <username> -p dots_and_boxes < schema.sql
     ```
-4. **Run the server-side:**
+4. **Manage environment variables:**
+    - Create a new `.env` file in the root directory
+    ```sh
+      cp .env.example .env
+    ```
+5. **Run the server-side:**
     ```sh
     node server.js
     ```
-5. **Run the client-side:**
+6. **Run the client-side:**
     ```sh
     npm run dev
     ```

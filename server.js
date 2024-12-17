@@ -23,6 +23,13 @@ db.connect(err => {
     console.log('Connected to the database');
 });
 
+app.use(express.static('dist'));
+
+app.get('/', (req, res) => {
+    // Send index.html
+    res.sendFile(import.meta.dirname + '/dist/index.html');
+});
+
 // Authentication endpoint
 app.post('/api/auth/login', (req, res) => {
     const { username, password } = req.body;

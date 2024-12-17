@@ -16,7 +16,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.1",
     "framer-motion": "^11.13.1",
-    "lucide-react": "^0.344.0",
+    "lucide-react": "^0.263.1",
     "mysql": "^2.18.1",
     "mysql2": "^3.9.2",
     "react": "^18.3.1",
